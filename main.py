@@ -44,3 +44,28 @@ def get_book(book_id: int):
     if book_id not in books:
         raise HTTPException(status_code=404, detail="Book not found")
     return books[book_id]
+
+@app.put("/books/{book_id}", status_code = 200)
+def update_book(book_id: int, book: Book):
+    if book_id not in books:
+        raise HTTPException(status_code=404, detail="Book not found")
+    
+    books[book_id] = {
+        "id": book_id,
+        "title": book.title,
+        "author": book.author,
+        "publication_year": book.publication_year,
+        "genre": book.genre
+    }
+    return books[book_id]
+
+@app.delete("/books/{book_id}", status_code = 204)
+def delete_book(book_id: int):
+    if book_id not in books:
+        raise HTTPException(status_code=404, detail="Book not found")
+    deleted_book = books.pop(book_id)
+
+    return {
+        "message": "Book deleted successfully",
+        "book": deleted_book
+    }
