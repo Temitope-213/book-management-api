@@ -57,6 +57,7 @@ def update_book(book_id: int, book: Book):
         "publication_year": book.publication_year,
         "genre": book.genre
     }
+    
     return books[book_id]
 
 @app.delete("/books/{book_id}", status_code = 204)
@@ -69,3 +70,14 @@ def delete_book(book_id: int):
         "message": "Book deleted successfully",
         "book": deleted_book
     }
+
+@app.get("/books", status_code = 200)
+def get_books(genre: str = None, limit: int = None):
+    result = []
+    for book in books.values():
+        if genre is None or book["genre"].lower() == genre.lower():
+            result.append(book)
+    if limit is not None:
+        result = result[:limit]
+
+    return result
