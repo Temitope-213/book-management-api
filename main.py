@@ -27,3 +27,20 @@ def create_book(book: Book):
     books[next_id] = new_book
     next_id += 1
     return new_book
+
+@app.get("/books", status_code = 200)
+def get_books(genre: str = None):
+    if genre is None:
+        return list(books.values())
+
+    filtered_books = []
+    for book in books.values():
+        if book["genre"].lower() == genre.lower():
+            filtered_books.append(book)
+    return filtered_books
+
+@app.get("/books/{book_id}", status_code = 200)
+def get_book(book_id: int):
+    if book_id not in books:
+        raise HTTPException(status_code=404, detail="Book not found")
+    return books[book_id]
