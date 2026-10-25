@@ -12,6 +12,7 @@ class Book(BaseModel):
     publication_year: int
     genre: str
 
+# Create a new book
 @app.post("/books", status_code = 201)
 def create_book(book: Book):
     global next_id
@@ -28,6 +29,7 @@ def create_book(book: Book):
     next_id += 1
     return new_book
 
+# Get all books or you can filter by genre
 @app.get("/books", status_code = 200)
 def get_books(genre: str = None):
     if genre is None:
@@ -39,12 +41,14 @@ def get_books(genre: str = None):
             filtered_books.append(book)
     return filtered_books
 
+# Get one book by its ID
 @app.get("/books/{book_id}", status_code = 200)
 def get_book(book_id: int):
     if book_id not in books:
         raise HTTPException(status_code=404, detail="Book not found")
     return books[book_id]
 
+# Replace an existing book (replaces all its fields)
 @app.put("/books/{book_id}", status_code = 200)
 def update_book(book_id: int, book: Book):
     if book_id not in books:
@@ -60,6 +64,7 @@ def update_book(book_id: int, book: Book):
     
     return books[book_id]
 
+# Delete a book by its ID
 @app.delete("/books/{book_id}", status_code = 204)
 def delete_book(book_id: int):
     if book_id not in books:
@@ -71,6 +76,7 @@ def delete_book(book_id: int):
         "book": deleted_book
     }
 
+# Get all books, with optional genre filtering and a limit
 @app.get("/books", status_code = 200)
 def get_books(genre: str = None, limit: int = None):
     result = []
